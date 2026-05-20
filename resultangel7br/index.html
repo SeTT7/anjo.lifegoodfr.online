@@ -870,9 +870,12 @@ function goToCheckout() {
     }, 800);
   });
 
-  // Back redirect
+  // ── Exit intent + back redirect ──────────────────────────────────────────
   (function() {
-    var BACK_URL = '../backredirectbr/index.html';
+    var CHECKOUT_990  = 'https://pay.mycheckoutt.com/019e46ed-e0fe-71b0-ac41-29b336027b21?ref=';
+    var BACK_URL      = '../backredirectbr/index.html';
+    var overlayShown  = false;
+
     function getQS() {
       var p = new URLSearchParams(window.location.search);
       var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','src','sck'];
@@ -880,10 +883,78 @@ function goToCheckout() {
       keys.forEach(function(k){ if (p.get(k)) out.set(k, p.get(k)); });
       return out.toString();
     }
-    history.pushState(null, '', window.location.href);
+
+    // ── Overlay HTML ────────────────────────────────────────────────────────
+    var overlay = document.createElement('div');
+    overlay.id = 'exitOverlay';
+    overlay.innerHTML = [
+      '<div id="exitBox">',
+        '<button id="exitClose" aria-label="Fechar">✕</button>',
+        '<p id="exitEyebrow">⚠ Espere — Não Feche Esta Página</p>',
+        '<h2 id="exitH">Seu anjo tem<br><span>uma última mensagem para você.</span></h2>',
+        '<p id="exitLead">Sabemos que R$27 pode não ser o momento certo.<br>Por isso, seu anjo intercedeu — e liberamos o acesso completo por apenas:</p>',
+        '<div id="exitPrice"><span>R$</span>9<span class="cents">,90</span></div>',
+        '<p id="exitNote">Valor simbólico — apenas para custear o app e o servidor.</p>',
+        '<button id="exitYes">✦ QUERO MEU ACESSO POR R$9,90 ✦<span>Pagamento seguro · Acesso imediato · Garantia 30 dias</span></button>',
+        '<button id="exitNo">Não, prefiro perder essa oportunidade</button>',
+      '</div>'
+    ].join('');
+
+    var style = document.createElement('style');
+    style.textContent = [
+      '#exitOverlay{position:fixed;inset:0;background:rgba(6,3,0,0.92);z-index:99999;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}',
+      '#exitOverlay.show{display:flex;}',
+      '#exitBox{position:relative;background:linear-gradient(135deg,#15100A,#1A1208);border:2px solid #8B6914;border-radius:10px;padding:36px 28px 30px;max-width:500px;width:100%;text-align:center;box-shadow:0 0 80px rgba(201,168,76,0.25),0 25px 60px rgba(0,0,0,0.9);animation:exitIn .35s cubic-bezier(.22,1,.36,1);}',
+      '@keyframes exitIn{from{opacity:0;transform:scale(.93) translateY(20px)}to{opacity:1;transform:none}}',
+      '#exitClose{position:absolute;top:12px;right:14px;background:transparent;border:1px solid #8B6914;color:#F8E5B0;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;}',
+      '#exitClose:hover{background:#8B6914;color:#fff;}',
+      '#exitEyebrow{font-family:Cinzel,serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#E74C3C;margin-bottom:14px;text-shadow:0 0 8px rgba(231,76,60,.5);}',
+      '#exitH{font-family:Cinzel,serif;font-size:clamp(22px,4vw,30px);font-weight:900;color:#fff;line-height:1.2;margin-bottom:14px;}',
+      '#exitH span{color:#FFF5E0;}',
+      '#exitLead{font-family:Lora,serif;font-size:14px;color:#EDDDC0;font-style:italic;line-height:1.65;margin-bottom:18px;}',
+      '#exitPrice{font-family:Cinzel,serif;font-size:clamp(60px,14vw,84px);font-weight:900;color:#FFF5E0;line-height:1;text-shadow:0 0 30px rgba(240,208,128,.55);margin:4px 0 6px;letter-spacing:-1px;}',
+      '#exitPrice span{font-size:.5em;vertical-align:top;margin-top:8px;display:inline-block;}',
+      '#exitPrice .cents{font-size:.42em;vertical-align:top;margin-top:12px;}',
+      '#exitNote{font-family:Lora,serif;font-size:12px;color:#8E7C66;font-style:italic;margin-bottom:22px;}',
+      '#exitYes{display:block;width:100%;background:linear-gradient(135deg,#F8E5B0,#C9A84C);color:#160E08;font-family:Cinzel,serif;font-size:clamp(13px,2vw,16px);font-weight:900;padding:18px 20px;border-radius:6px;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;box-shadow:0 8px 30px rgba(212,169,61,.5);transition:all .25s;margin-bottom:10px;}',
+      '#exitYes span{display:block;font-family:Lora,serif;font-size:11px;font-weight:400;font-style:italic;margin-top:4px;text-transform:none;letter-spacing:0;color:#1d1408;opacity:.9;}',
+      '#exitYes:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(212,169,61,.7);}',
+      '#exitNo{background:transparent;border:none;color:#6B5E4E;font-family:Lora,serif;font-size:12px;font-style:italic;text-decoration:underline;cursor:pointer;padding:6px;transition:color .2s;}',
+      '#exitNo:hover{color:#A09080;}'
+    ].join('');
+
+    document.head.appendChild(style);
+    document.body.appendChild(overlay);
+
+    function showOverlay() {
+      if (overlayShown) return;
+      overlayShown = true;
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function hideOverlay() {
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('exitClose').addEventListener('click', hideOverlay);
+    document.getElementById('exitNo').addEventListener('click', hideOverlay);
+    document.getElementById('exitYes').addEventListener('click', function() {
+      var qs = getQS();
+      window.location.href = CHECKOUT_990 + (qs ? '&' + qs : '');
+    });
+
+    // Mobile: troca de app / minimizar / tela inicial
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) showOverlay();
+    });
+
+    // ── Back redirect ────────────────────────────────────────────────────────
+    history.pushState({ei: 1}, '', window.location.href);
+    history.pushState({ei: 2}, '', window.location.href);
     window.addEventListener('popstate', function() {
       var qs = getQS();
-      window.location.href = BACK_URL + (qs ? '?' + qs : '');
+      window.location.replace(BACK_URL + (qs ? '?' + qs : ''));
     });
   })();
 </script>
