@@ -932,6 +932,10 @@ function goToCheckout() {
 
   var FLAGS = {
     US: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#B22234"/><path d="M0 1.85h24M0 5.54h24M0 9.23h24M0 12.92h24" stroke="#fff" stroke-width="1.23"/><rect width="9.6" height="8.6" fill="#3C3B6E"/></svg>',
+    GB: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#012169"/><path d="M0,0 L24,16 M24,0 L0,16" stroke="#fff" stroke-width="3.2"/><path d="M0,0 L24,16 M24,0 L0,16" stroke="#C8102E" stroke-width="2"/><rect x="9.6" width="4.8" height="16" fill="#fff"/><rect y="6.4" width="24" height="3.2" fill="#fff"/><rect x="10.4" width="3.2" height="16" fill="#C8102E"/><rect y="7.2" width="24" height="1.6" fill="#C8102E"/></svg>',
+    CA: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#fff"/><rect width="6" height="16" fill="#FF0000"/><rect x="18" width="6" height="16" fill="#FF0000"/><polygon points="12,3 12.8,5.6 15.6,5.6 13.4,7.2 14.2,9.8 12,8.2 9.8,9.8 10.6,7.2 8.4,5.6 11.2,5.6" fill="#FF0000"/></svg>',
+    AU: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#00008B"/><rect width="12" height="8" fill="#012169"/><path d="M0,0 L12,8 M12,0 L0,8" stroke="#fff" stroke-width="2.2"/><path d="M0,0 L12,8 M12,0 L0,8" stroke="#C8102E" stroke-width="1.4"/><rect x="4.8" width="2.4" height="8" fill="#fff"/><rect y="3.2" width="12" height="1.6" fill="#fff"/><rect x="5.2" width="1.6" height="8" fill="#C8102E"/><rect y="3.6" width="12" height="0.8" fill="#C8102E"/><circle cx="6" cy="12" r="1.3" fill="#fff"/><circle cx="19" cy="5" r="0.9" fill="#fff"/><circle cx="21" cy="9" r="0.9" fill="#fff"/><circle cx="19" cy="13" r="0.9" fill="#fff"/><circle cx="16" cy="11" r="0.7" fill="#fff"/></svg>',
+    NZ: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#00247D"/><rect width="12" height="8" fill="#012169"/><path d="M0,0 L12,8 M12,0 L0,8" stroke="#fff" stroke-width="2.2"/><path d="M0,0 L12,8 M12,0 L0,8" stroke="#C8102E" stroke-width="1.4"/><rect x="4.8" width="2.4" height="8" fill="#fff"/><rect y="3.2" width="12" height="1.6" fill="#fff"/><rect x="5.2" width="1.6" height="8" fill="#C8102E"/><rect y="3.6" width="12" height="0.8" fill="#C8102E"/><polygon points="17,3.5 17.4,4.7 18.7,4.7 17.6,5.4 18,6.6 17,5.9 16,6.6 16.4,5.4 15.3,4.7 16.6,4.7" fill="#CC142B"/><polygon points="21,1.5 21.3,2.5 22.4,2.5 21.5,3.1 21.8,4.1 21,3.5 20.2,4.1 20.5,3.1 19.6,2.5 20.7,2.5" fill="#CC142B"/><polygon points="20,9 20.3,10 21.4,10 20.5,10.6 20.8,11.6 20,11 19.2,11.6 19.5,10.6 18.6,10 19.7,10" fill="#CC142B"/><polygon points="15,10 15.3,11 16.4,11 15.5,11.6 15.8,12.6 15,12 14.2,12.6 14.5,11.6 13.6,11 14.7,11" fill="#CC142B"/></svg>',
     CO: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="8" fill="#FCD116"/><rect y="8" width="24" height="4" fill="#003893"/><rect y="12" width="24" height="4" fill="#CE1126"/></svg>',
     MX: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="16" fill="#006847"/><rect x="8" width="8" height="16" fill="#fff"/><rect x="16" width="8" height="16" fill="#CE1126"/><circle cx="12" cy="8" r="2.2" fill="none" stroke="#806020" stroke-width="0.6"/></svg>',
     AR: '<svg viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="16" fill="#74ACDF"/><rect y="5.33" width="24" height="5.33" fill="#fff"/><circle cx="12" cy="8" r="1.6" fill="#F6B40E"/></svg>',
@@ -942,14 +946,18 @@ function goToCheckout() {
   };
 
   var COUNTRIES = [
-    { code: 'US', currency: 'USD', name: 'United States',  symbol: '$',   rate: 1,       locale: 'en-US' },
-    { code: 'CO', currency: 'COP', name: 'Colombia',        symbol: '$',   rate: 4200,    locale: 'es-CO' },
-    { code: 'MX', currency: 'MXN', name: 'Mexico',          symbol: '$',   rate: 17,      locale: 'es-MX' },
-    { code: 'AR', currency: 'ARS', name: 'Argentina',       symbol: '$',   rate: 1200,    locale: 'es-AR' },
-    { code: 'CL', currency: 'CLP', name: 'Chile',           symbol: '$',   rate: 950,     locale: 'es-CL' },
-    { code: 'PE', currency: 'PEN', name: 'Peru',            symbol: 'S/',  rate: 3.7,     locale: 'es-PE' },
-    { code: 'ES', currency: 'EUR', name: 'Spain',           symbol: '€',   rate: 0.92,    locale: 'es-ES' },
-    { code: 'BR', currency: 'BRL', name: 'Brazil',          symbol: 'R$',  rate: 5.1,     locale: 'pt-BR' }
+    { code: 'US', currency: 'USD', name: 'United States',   symbol: '$',   rate: 1,       locale: 'en-US' },
+    { code: 'GB', currency: 'GBP', name: 'United Kingdom',  symbol: '£',   rate: 0.79,    locale: 'en-GB' },
+    { code: 'CA', currency: 'CAD', name: 'Canada',           symbol: 'CA$', rate: 1.36,    locale: 'en-CA' },
+    { code: 'AU', currency: 'AUD', name: 'Australia',        symbol: 'A$',  rate: 1.55,    locale: 'en-AU' },
+    { code: 'NZ', currency: 'NZD', name: 'New Zealand',      symbol: 'NZ$', rate: 1.68,    locale: 'en-NZ' },
+    { code: 'ES', currency: 'EUR', name: 'Europe (EUR)',      symbol: '€',   rate: 0.92,    locale: 'de-DE' },
+    { code: 'BR', currency: 'BRL', name: 'Brazil',            symbol: 'R$',  rate: 5.1,     locale: 'pt-BR' },
+    { code: 'MX', currency: 'MXN', name: 'Mexico',            symbol: '$',   rate: 17,      locale: 'es-MX' },
+    { code: 'CO', currency: 'COP', name: 'Colombia',          symbol: '$',   rate: 4200,    locale: 'es-CO' },
+    { code: 'AR', currency: 'ARS', name: 'Argentina',         symbol: '$',   rate: 1200,    locale: 'es-AR' },
+    { code: 'CL', currency: 'CLP', name: 'Chile',             symbol: '$',   rate: 950,     locale: 'es-CL' },
+    { code: 'PE', currency: 'PEN', name: 'Peru',               symbol: 'S/',  rate: 3.7,     locale: 'es-PE' }
   ];
 
   function byCode(c) {
